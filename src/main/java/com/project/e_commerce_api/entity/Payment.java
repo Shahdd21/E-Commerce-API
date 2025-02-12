@@ -19,6 +19,7 @@ public class Payment {
     private String payment_method;
 
     @Column(name = "payment_status")
+    @Enumerated(EnumType.STRING)
     private PaymentStatus payment_status;
 
     @Column(name = "amount")

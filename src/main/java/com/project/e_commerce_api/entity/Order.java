@@ -18,6 +18,7 @@ public class Order {
     private int order_id;
 
     @Column(name = "order_status")
+    @Enumerated(EnumType.STRING)
     private OrderStatus order_status;
 
     @Column(name = "total_price")
