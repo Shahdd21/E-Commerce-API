@@ -1,6 +1,7 @@
 package com.project.e_commerce_api.entity;
 
 import com.project.e_commerce_api.enums.UserRole;
+import com.project.e_commerce_api.enums.UserRoleConverter;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,7 +26,7 @@ public class User implements UserDetails {
     private String password;
 
     @Column(name = "role")
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = UserRoleConverter.class)
     private UserRole role;
 
     @Column(name = "approved")
