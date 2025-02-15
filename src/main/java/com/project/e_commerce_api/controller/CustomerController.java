@@ -1,5 +1,6 @@
 package com.project.e_commerce_api.controller;
 
+import com.project.e_commerce_api.dto.CustomerDTO;
 import com.project.e_commerce_api.entity.Customer;
 import com.project.e_commerce_api.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class CustomerController {
     }
 
     @GetMapping("/customers")
-    public List<Customer> findAll(){
+    public List<CustomerDTO> findAll(){
         return customerService.findAll();
     }
 }
