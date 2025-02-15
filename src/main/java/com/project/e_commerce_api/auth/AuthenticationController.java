@@ -26,15 +26,13 @@ public class AuthenticationController {
 
     @PostMapping("/register/vendor")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody VendorRegisterRequest request
-    ){
+            @RequestBody VendorRegisterRequest request) {
         return ResponseEntity.ok(authenticationService.registerVendor(request));
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
-    ){
+            @RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 }

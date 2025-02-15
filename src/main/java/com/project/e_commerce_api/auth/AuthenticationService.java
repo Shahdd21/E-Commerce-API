@@ -62,6 +62,7 @@ public class AuthenticationService {
                 UserRole.VENDOR, true);
 
         userRepository.save(user);
+
         vendor.setUserObject(user);
         vendorRepository.save(vendor);
 
@@ -83,6 +84,7 @@ public class AuthenticationService {
                 .orElseThrow();
 
         var jwtToken = jwtService.generateToken(user);
+        System.out.println("\n GENERATED TOKEN: "+jwtToken+"\n");
 
         return new AuthenticationResponse(jwtToken);
     }
