@@ -25,7 +25,6 @@ public class Product {
     private BigDecimal price;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    //@JsonManagedReference
     private List<Review> reviews;
 
 
@@ -49,7 +48,7 @@ public class Product {
 
     @ManyToMany
     @JoinTable(
-            name="order_vendor",
+            name="product_vendor",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "vendor_id")
     )
@@ -80,7 +79,7 @@ public class Product {
         return product_id;
     }
 
-    public void setProduct_id(int product_id) {
+    public void setProduct_id(Integer product_id) {
         this.product_id = product_id;
     }
 

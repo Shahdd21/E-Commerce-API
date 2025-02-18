@@ -8,4 +8,10 @@ import java.util.List;
 public interface ProductService {
 
     List<ProductDTO> findAll();
+
+    ProductDTO findById(Integer id);
+
+    Product save(Product product);
+
+    void deleteById(Integer id);
 }

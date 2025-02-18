@@ -66,4 +66,15 @@ public class ProductDTO {
     public void setCategories(List<String> categories) {
         this.categories = categories;
     }
+
+    @Override
+    public String toString() {
+        return "ProductDTO{" +
+                "product_id=" + product_id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", categories=" + categories +
+                '}';
+    }
 }
