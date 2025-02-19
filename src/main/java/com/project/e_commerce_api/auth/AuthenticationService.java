@@ -42,7 +42,7 @@ public class AuthenticationService {
                 request.getAddress(), request.getPhoneNumber(), request.getGender());
 
         User user = new User(request.getFirstName()+"user", passwordEncoder.encode(request.getPassword()),
-                UserRole.CUSTOMER, true);
+                UserRole.ROLE_CUSTOMER, true);
 
         userRepository.save(user);
         customer.setUser(user);
@@ -59,7 +59,7 @@ public class AuthenticationService {
                 request.getPhoneNumber(), new ArrayList<>());
 
         User user = new User(request.getEmail(), passwordEncoder.encode(request.getPassword()),
-                UserRole.VENDOR, true);
+                UserRole.ROLE_VENDOR, true);
 
         userRepository.save(user);
 
