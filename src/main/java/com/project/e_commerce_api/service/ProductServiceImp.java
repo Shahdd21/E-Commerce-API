@@ -52,6 +52,11 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Override
+    public Product find(Integer id) {
+        return productRepository.findById(id).get();
+    }
+
+    @Override
     public ProductDTO add(Product product) {
 
         //in case they put id in json

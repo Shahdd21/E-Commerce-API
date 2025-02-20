@@ -4,10 +4,12 @@ import com.project.e_commerce_api.config.JwtService;
 import com.project.e_commerce_api.entity.Customer;
 import com.project.e_commerce_api.entity.User;
 import com.project.e_commerce_api.entity.Vendor;
+import com.project.e_commerce_api.entity.Wishlist;
 import com.project.e_commerce_api.enums.UserRole;
 import com.project.e_commerce_api.repository.CustomerRepository;
 import com.project.e_commerce_api.repository.UserRepository;
 import com.project.e_commerce_api.repository.VendorRepository;
+import com.project.e_commerce_api.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,15 +24,17 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
     private final VendorRepository vendorRepository;
+    private final WishlistRepository wishlistRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthenticationService(UserRepository userRepository, CustomerRepository customerRepository, VendorRepository vendorRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+    public AuthenticationService(UserRepository userRepository, CustomerRepository customerRepository, VendorRepository vendorRepository, WishlistRepository wishlistRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.vendorRepository = vendorRepository;
+        this.wishlistRepository = wishlistRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
@@ -46,7 +50,11 @@ public class AuthenticationService {
 
         userRepository.save(user);
         customer.setUser(user);
-        customerRepository.save(customer);
+        Customer savedCustomer = customerRepository.save(customer);
+
+        Wishlist wishlist = new Wishlist();
+        wishlist.setCustomer(savedCustomer);
+        wishlistRepository.save(wishlist);
 
         var jwtToken = jwtService.generateToken(user);
 

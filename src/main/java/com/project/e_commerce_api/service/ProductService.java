@@ -12,6 +12,8 @@ public interface ProductService {
 
     ProductDTO findById(Integer id);
 
+    Product find(Integer id);
+
     ProductDTO add(Product product);
 
     ProductDTO update(Product product);

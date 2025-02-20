@@ -10,7 +10,10 @@ import java.util.List;
 public class Wishlist {
 
     @Id
+    private Integer customerId;
+
     @OneToOne
+    @MapsId
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
@@ -24,7 +27,14 @@ public class Wishlist {
     private List<Product> products;
 
     public Wishlist(){
+    }
 
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
     }
 
     public Customer getCustomer() {

@@ -1,9 +1,5 @@
 package com.project.e_commerce_api.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 @Entity
@@ -19,7 +15,7 @@ public class Review {
     private String content;
 
     @Column(name = "rating")
-    private int rating;
+    private Integer rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
@@ -27,7 +23,6 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    //@JsonBackReference
     private Product product;
 
     public Review(){
@@ -57,11 +52,11 @@ public class Review {
         this.content = content;
     }
 
-    public int getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 
