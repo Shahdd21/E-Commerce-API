@@ -1,6 +1,6 @@
 package com.project.e_commerce_api.entity;
 
-import com.project.e_commerce_api.enums.PaymentStatus;
+import com.project.e_commerce_api.enums.*;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -16,10 +16,11 @@ public class Payment {
     private int payment_id;
 
     @Column(name = "payment_method")
-    private String payment_method;
+    @Convert(converter = PaymentMethodConverter.class)
+    private PaymentMethod payment_method;
 
     @Column(name = "payment_status")
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = PaymentStatusConverter.class)
     private PaymentStatus payment_status;
 
     @Column(name = "amount")
@@ -36,7 +37,7 @@ public class Payment {
 
     }
 
-    public Payment(String payment_method, PaymentStatus payment_status,
+    public Payment(PaymentMethod payment_method, PaymentStatus payment_status,
                    BigDecimal amount, LocalDate created_at, Order order) {
         this.payment_method = payment_method;
         this.payment_status = payment_status;
@@ -53,11 +54,11 @@ public class Payment {
         this.payment_id = payment_id;
     }
 
-    public String getPayment_method() {
+    public PaymentMethod getPayment_method() {
         return payment_method;
     }
 
-    public void setPayment_method(String payment_method) {
+    public void setPayment_method(PaymentMethod payment_method) {
         this.payment_method = payment_method;
     }
 
