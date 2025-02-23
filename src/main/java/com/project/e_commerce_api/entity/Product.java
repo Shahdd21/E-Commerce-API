@@ -37,13 +37,8 @@ public class Product {
     private List<Category> categories;
 
 
-    @ManyToMany
-    @JoinTable(
-            name="order_products",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "order_id")
-    )
-    private List<Order> boughtInOrders;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL) // the field name in OrderProduct
+    private List<OrderProduct> boughtInOrders;
 
 
     @ManyToMany
@@ -121,11 +116,11 @@ public class Product {
         reviews.add(review);
     }
 
-    public List<Order> getBoughtInOrders() {
+    public List<OrderProduct> getBoughtInOrders() {
         return boughtInOrders;
     }
 
-    public void setBoughtInOrders(List<Order> boughtInOrders) {
+    public void setBoughtInOrders(List<OrderProduct> boughtInOrders) {
         this.boughtInOrders = boughtInOrders;
     }
 
@@ -137,7 +132,7 @@ public class Product {
         this.categories = categories;
     }
 
-    public void addOrder(Order order){
+    public void addOrder(OrderProduct order){
         if(boughtInOrders == null) boughtInOrders = new ArrayList<>();
 
         boughtInOrders.add(order);

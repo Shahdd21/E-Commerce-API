@@ -176,4 +176,9 @@ public class ProductServiceImp implements ProductService{
 
         return new ProductDTO(productRepository.save(product));
     }
+
+    @Override
+    public List<Product> findAllById(List<Integer> products) {
+        return productRepository.findAllById(products);
+    }
 }

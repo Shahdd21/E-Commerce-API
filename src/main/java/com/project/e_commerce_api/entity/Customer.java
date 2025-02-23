@@ -2,6 +2,8 @@ package com.project.e_commerce_api.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "customer")
 public class Customer {
@@ -32,6 +34,9 @@ public class Customer {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Order> orders;
 
     public Customer(){
 
@@ -111,6 +116,14 @@ public class Customer {
         this.user = user;
     }
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -121,6 +134,8 @@ public class Customer {
                 ", address='" + address + '\'' +
                 ", phone_number='" + phone_number + '\'' +
                 ", gender=" + gender +
+                ", user=" + user +
+                ", orders=" + orders +
                 '}';
     }
 }

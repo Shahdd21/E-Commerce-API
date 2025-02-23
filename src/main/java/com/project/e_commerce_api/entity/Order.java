@@ -1,6 +1,8 @@
 package com.project.e_commerce_api.entity;
 
 import com.project.e_commerce_api.enums.OrderStatus;
+import com.project.e_commerce_api.enums.OrderStatusConverter;
+import com.project.e_commerce_api.enums.UserRoleConverter;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -9,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "order")
+@Table(name = "`order`")
 public class Order {
 
     @Id
@@ -18,37 +20,37 @@ public class Order {
     private int order_id;
 
     @Column(name = "order_status")
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = OrderStatusConverter.class)
     private OrderStatus order_status;
 
     @Column(name = "total_price")
-    private BigDecimal total_price;
+    private BigDecimal total_price = BigDecimal.ZERO;
 
     @Column(name = "created_at")
     private LocalDate created_at;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL) // "order" property in Payment class
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true) // "order" property in Payment class
     private Payment payment;
 
-    @ManyToMany
-    @JoinTable(
-            name="order_products",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> products;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL) // the field name in OrderProduct
+    private List<OrderProduct> orderProducts;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
 
     public Order(){
 
     }
 
     public Order(OrderStatus order_status, BigDecimal total_price,
-                 LocalDate created_at, Payment payment, List<Product> products) {
+                 LocalDate created_at, Payment payment, List<OrderProduct> products) {
         this.order_status = order_status;
         this.total_price = total_price;
         this.created_at = created_at;
         this.payment = payment;
-        this.products = products;
+        this.orderProducts = products;
     }
 
     public int getOrder_id() {
@@ -91,18 +93,30 @@ public class Order {
         this.payment = payment;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<OrderProduct> getProducts() {
+        return orderProducts;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setProducts(List<OrderProduct> products) {
+        this.orderProducts = products;
     }
 
-    public void addProduct(Product product){
-        if(products == null) products = new ArrayList<>();
+    public void addProduct(Product product, int quantity){
+        if(orderProducts == null) orderProducts = new ArrayList<>();
 
-        products.add(product);
+        OrderProduct orderProduct = new OrderProduct(this, product, quantity);
+        orderProducts.add(orderProduct);
+
+        // Update total price
+        this.total_price = this.total_price.add(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     @Override
@@ -112,8 +126,9 @@ public class Order {
                 ", order_status=" + order_status +
                 ", total_price=" + total_price +
                 ", created_at=" + created_at +
-                ", payment_details=" + payment +
-                ", products_list=" + products +
+                ", payment=" + payment +
+                ", products=" + orderProducts +
+                ", customer=" + customer +
                 '}';
     }
 }
