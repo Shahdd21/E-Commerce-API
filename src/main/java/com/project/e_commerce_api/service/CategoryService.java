@@ -9,8 +9,6 @@ public interface CategoryService {
 
     List<CategoryDTO> findAll();
 
-    CategoryDTO findDtoById(Integer id);
-
     Category findById(Integer id);
 
     Category save(Category category);

@@ -1,7 +1,6 @@
 package com.project.e_commerce_api.service;
 
 import com.project.e_commerce_api.dto.CategoryDTO;
-import com.project.e_commerce_api.dto.ProductDTO;
 import com.project.e_commerce_api.entity.Category;
 import com.project.e_commerce_api.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
