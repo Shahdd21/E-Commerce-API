@@ -2,12 +2,13 @@ package com.project.e_commerce_api.service;
 
 import com.project.e_commerce_api.dto.OrderDTO;
 import com.project.e_commerce_api.dto.OrderProductDTO;
-import com.project.e_commerce_api.entity.OrderRequest;
+import com.project.e_commerce_api.dto.OrderRequest;
 import com.project.e_commerce_api.entity.Order;
 import com.project.e_commerce_api.entity.OrderProduct;
 import com.project.e_commerce_api.entity.Product;
 import com.project.e_commerce_api.entity.User;
 import com.project.e_commerce_api.enums.OrderStatus;
+import com.project.e_commerce_api.exception.ProductNotFoundException;
 import com.project.e_commerce_api.repository.OrderProductRepository;
 import com.project.e_commerce_api.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class OrderServiceImp implements OrderService{
         List<Product> foundProducts = productService.findAllById(orderProductsIds);
 
         if(foundProducts.size() != orderProductsIds.size())
-            throw new RuntimeException("Some products are not found in the database");
+            throw new ProductNotFoundException("Some products are not found in the database");
 
         Order order = new Order();
 
@@ -108,8 +109,8 @@ public class OrderServiceImp implements OrderService{
     }
 
     @Override
-    public OrderDTO findById(Integer orderId) {
-        return new OrderDTO(orderRepository.findById(orderId).orElse(null));
+    public Order findById(Integer orderId) {
+        return orderRepository.findById(orderId).orElse(null);
     }
 
     @Override
@@ -148,5 +149,13 @@ public class OrderServiceImp implements OrderService{
         return "Order with id "+ orderId+
                 " changed from "+ oldStatus
                 +"---> to "+ newStatus;
+    }
+
+    @Override
+    public void updateStatus(Integer orderId, OrderStatus orderStatus) {
+        Order order = orderRepository.findById(orderId).get();
+
+        order.setOrder_status(orderStatus);
+        orderRepository.save(order);
     }
 }

@@ -12,4 +12,6 @@ public interface VendorService {
     Vendor save(Vendor vendor);
 
     List<VendorDTO> findAll();
+
+    List<Vendor> findAllById(List<Integer> vendorIds);
 }

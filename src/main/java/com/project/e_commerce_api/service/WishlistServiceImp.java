@@ -4,6 +4,7 @@ import com.project.e_commerce_api.dto.ProductDTO;
 import com.project.e_commerce_api.dto.WishlistDTO;
 import com.project.e_commerce_api.entity.Product;
 import com.project.e_commerce_api.entity.Wishlist;
+import com.project.e_commerce_api.exception.ProductNotFoundException;
 import com.project.e_commerce_api.repository.ProductRepository;
 import com.project.e_commerce_api.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class WishlistServiceImp implements WishlistService{
 
         Product product = productRepository.findById(productId).orElse(null);
 
-        if (product == null) throw new RuntimeException("No product with id - "+ product);
+        if (product == null) throw new ProductNotFoundException("No product with id - "+ product);
 
         wishlist.getProducts().add(product);
 
@@ -49,7 +50,7 @@ public class WishlistServiceImp implements WishlistService{
 
         Product product = productRepository.findById(productId).orElse(null);
 
-        if (product == null) throw new RuntimeException("No product with id - "+ product);
+        if (product == null) throw new ProductNotFoundException("No product with id - "+ product);
 
         wishlist.getProducts().remove(product);
         wishlistRepository.save(wishlist);

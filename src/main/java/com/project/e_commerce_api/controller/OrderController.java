@@ -1,9 +1,10 @@
 package com.project.e_commerce_api.controller;
 
 import com.project.e_commerce_api.dto.OrderDTO;
-import com.project.e_commerce_api.entity.OrderRequest;
+import com.project.e_commerce_api.dto.OrderRequest;
+import com.project.e_commerce_api.entity.Order;
 import com.project.e_commerce_api.entity.User;
-import com.project.e_commerce_api.enums.OrderStatus;
+import com.project.e_commerce_api.exception.OrderNotFoundException;
 import com.project.e_commerce_api.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -40,18 +41,18 @@ public class OrderController {
     public OrderDTO getOrderById(@PathVariable Integer orderId,
                                  @AuthenticationPrincipal User user){
 
-        OrderDTO order = orderService.findById(orderId);
+        Order order = orderService.findById(orderId);
 
         if( !((order != null) && (order.getCustomer().getCustomer_id() == user.getCustomer().getCustomer_id())) )
-            throw new RuntimeException("no order with id - "+ orderId);
+            throw new OrderNotFoundException("no order with id - "+ orderId);
 
-        return order;
+        return new OrderDTO(order);
     }
 
     @PatchMapping("/{orderId}/cancel")
     public String cancelOrder(@PathVariable Integer orderId){
 
-        OrderDTO order = orderService.findById(orderId);
+        Order order = orderService.findById(orderId);
 
         if(order == null) return "No order with id - "+orderId;
 
@@ -65,11 +66,12 @@ public class OrderController {
         return orderService.getAllOrders(user);
     }
 
+    // admin
     @PatchMapping("/{orderId}/status")
     public String updateStatus(@PathVariable Integer orderId,
                                @RequestBody Map<String,String> orderStatus){
 
-        OrderDTO order = orderService.findById(orderId);
+        Order order = orderService.findById(orderId);
 
         if(order == null) return "No order with id - "+orderId;
 

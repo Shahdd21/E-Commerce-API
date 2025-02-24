@@ -1,14 +1,18 @@
 package com.project.e_commerce_api.service;
 
 import com.project.e_commerce_api.dto.ProductDTO;
+import com.project.e_commerce_api.dto.ProductAddRequest;
+import com.project.e_commerce_api.dto.ProductUpdateRequest;
 import com.project.e_commerce_api.entity.Category;
 import com.project.e_commerce_api.entity.Product;
 import com.project.e_commerce_api.entity.Vendor;
+import com.project.e_commerce_api.exception.CategoryNotFoundException;
+import com.project.e_commerce_api.exception.ProductNotFoundException;
+import com.project.e_commerce_api.exception.VendorNotFoundException;
 import com.project.e_commerce_api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,19 +40,15 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Override
-    public ProductDTO findById(Integer id) {
+    public Product findById(Integer id) {
 
-        Optional<Product> result = productRepository.findById(id);
+        Optional<Product> product = productRepository.findById(id);
 
-        ProductDTO product;
-
-        if(result.isPresent()){
-            product = new ProductDTO(result.get());
+        if(!product.isPresent()){
+            throw new ProductNotFoundException("Didn't find product with id - "+id);
         }
 
-        else throw new RuntimeException("Didn't find product with id - "+id);
-
-        return product;
+        return product.get();
     }
 
     @Override
@@ -57,52 +57,58 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Override
-    public ProductDTO add(Product product) {
+    public ProductDTO add(ProductAddRequest productAddRequest) {
 
-        //in case they put id in json
-        // set id to null to force insertion of new item not update
-        product.setProduct_id(null);
+        Product product = new Product();
+        product.setName(productAddRequest.getName());
+        product.setDescription(productAddRequest.getDescription());
+        product.setPrice(productAddRequest.getPrice());
 
-        //check for the dependencies (relationships), if new save them first in their tables
-        //then save the product along with its dependencies
+        List<Integer> vendorIds = productAddRequest.getVendorIds();
+        List<Vendor> vendors = vendorService.findAllById(vendorIds);
 
-        //check for categories
-        List<Category> existingCategories = new ArrayList<>();
-        for(Category category : product.getCategories()){
-            Category isFoundCategory = categoryService.findById(category.getCategory_id());
+        if(vendors.size() != vendorIds.size())
+            throw new VendorNotFoundException("Some vendors are not found in the database");
 
-            if(isFoundCategory != null){
-                existingCategories.add(isFoundCategory);
-            }
+        product.setVendors(vendors);
 
-            else{
-                existingCategories.add(categoryService.save(category));
-            }
-        }
-        product.setCategories(existingCategories);
+        List<Integer> categoryIds = productAddRequest.getCategoryIds();
+        List<Category> categories = categoryService.findAllById(categoryIds);
 
-        //check for vendors
-        List<Vendor> existingVendors = new ArrayList<>();
-        for(Vendor vendor : product.getVendors()){
-            Vendor isFoundVendor = vendorService.findById(vendor.getVendor_id());
+        if(categories.size() != categoryIds.size())
+            throw new CategoryNotFoundException("Some categories are not found in the database");
 
-            if(isFoundVendor != null){
-                existingVendors.add(isFoundVendor);
-            }
-
-            else{
-                existingVendors.add(vendorService.save(vendor));
-            }
-        }
-        product.setVendors(existingVendors);
+        product.setCategories(categories);
 
         return new ProductDTO(productRepository.save(product));
     }
 
     @Override
-    public ProductDTO update(Product updatedProduct) {
+    public ProductDTO fullUpdate(Integer productId, ProductAddRequest updatedProduct) {
 
-        return new ProductDTO(productRepository.save(updatedProduct));
+        Product product = productRepository.findById(productId).get();
+
+        product.setName(updatedProduct.getName());
+        product.setDescription(updatedProduct.getDescription());
+        product.setPrice(updatedProduct.getPrice());
+
+        List<Integer> vendorIds = updatedProduct.getVendorIds();
+        List<Vendor> vendors = vendorService.findAllById(vendorIds);
+
+        if(vendors.size() != vendorIds.size())
+            throw new VendorNotFoundException("Some vendors are not found in the database");
+
+        product.setVendors(vendors);
+
+        List<Integer> categoryIds = updatedProduct.getCategoryIds();
+        List<Category> categories = categoryService.findAllById(categoryIds);
+
+        if(categories.size() != categoryIds.size())
+            throw new CategoryNotFoundException("Some categories are not found in the database");
+
+        product.setCategories(categories);
+
+        return new ProductDTO(productRepository.save(product));
     }
 
     @Override
@@ -111,15 +117,11 @@ public class ProductServiceImp implements ProductService{
     }
 
     @Override
-    public ProductDTO update(Integer productId, Product updatedProduct) {
+    public ProductDTO update(Integer productId, ProductUpdateRequest updatedProduct) {
 
-        Product existingProduct = productRepository.getReferenceById(productId);
+        Product existingProduct = productRepository.findById(productId).get();
 
         if(updatedProduct.getName() != null) existingProduct.setName(updatedProduct.getName());
-
-        if(updatedProduct.getVendors() != null) existingProduct.setVendors(updatedProduct.getVendors());
-
-        if(updatedProduct.getCategories() != null) existingProduct.setCategories(updatedProduct.getCategories());
 
         if(updatedProduct.getDescription() != null) existingProduct.setDescription(updatedProduct.getDescription());
 
@@ -144,7 +146,7 @@ public class ProductServiceImp implements ProductService{
 
         Category category = categoryService.findById(categoryId);
 
-        if(category == null) throw new RuntimeException("No category with id - "+categoryId);
+        if(category == null) throw new CategoryNotFoundException("No category with id - "+categoryId);
 
         List<Product> products = category.getProducts();
 
@@ -156,7 +158,7 @@ public class ProductServiceImp implements ProductService{
 
         Vendor vendor = vendorService.findById(vendorId);
 
-        if(vendor == null) throw new RuntimeException("No vendor with id - "+vendorId);
+        if(vendor == null) throw new VendorNotFoundException("No vendor with id - "+vendorId);
 
         List<Product> products = vendor.getProducts();
 
@@ -170,7 +172,7 @@ public class ProductServiceImp implements ProductService{
 
         Vendor vendor = vendorService.findById(vendorId);
 
-        if(vendor == null) throw new RuntimeException("No vendor with id - "+vendorId);
+        if(vendor == null) throw new VendorNotFoundException("No vendor with id - "+vendorId);
 
         product.getVendors().add(vendor);
 
@@ -180,5 +182,35 @@ public class ProductServiceImp implements ProductService{
     @Override
     public List<Product> findAllById(List<Integer> products) {
         return productRepository.findAllById(products);
+    }
+
+    @Override
+    public String deleteVendorFromProduct(Integer productId, Integer vendorId) {
+
+        Vendor vendor = vendorService.findById(vendorId);
+        Product product = productRepository.findById(productId).get();
+
+        product.getVendors().remove(vendor);
+        vendor.getProducts().remove(product);
+
+        productRepository.save(product);
+        vendorService.save(vendor);
+
+        return "Vendor with id - "+ vendorId+" is removed successfully";
+    }
+
+    @Override
+    public String deleteCategoryFromProduct(Integer productId, Integer categoryId) {
+
+        Category category = categoryService.findById(categoryId);
+        Product product = productRepository.findById(productId).get();
+
+        product.getCategories().remove(category);
+        category.getProducts().remove(product);
+
+        productRepository.save(product);
+        categoryService.save(category);
+
+        return "Category with id - "+ categoryId+" is removed successfully";
     }
 }

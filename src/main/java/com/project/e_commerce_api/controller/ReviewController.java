@@ -3,6 +3,7 @@ package com.project.e_commerce_api.controller;
 import com.project.e_commerce_api.dto.ReviewDTO;
 import com.project.e_commerce_api.entity.Review;
 import com.project.e_commerce_api.entity.User;
+import com.project.e_commerce_api.exception.ReviewNotFoundException;
 import com.project.e_commerce_api.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,21 +38,21 @@ public class ReviewController {
 
     @PatchMapping("/{reviewId}")
     public ReviewDTO modifyReview(@PathVariable Integer reviewId,
-                                  @RequestBody Review updatedReview){
+                                  @RequestBody Review updatedReview) throws ReviewNotFoundException {
 
         Review review = reviewService.findById(reviewId);
 
-        if(review == null) throw new RuntimeException("No review with id - "+reviewId);
+        if(review == null) throw new ReviewNotFoundException("No review with id - "+reviewId);
 
         return reviewService.modifyReview(reviewId, updatedReview);
     }
 
     @DeleteMapping("/{reviewId}")
-    public String deleteReview(@PathVariable Integer reviewId){
+    public String deleteReview(@PathVariable Integer reviewId) throws ReviewNotFoundException {
 
         Review review = reviewService.findById(reviewId);
 
-        if(review == null) throw new RuntimeException("No review with id - "+reviewId);
+        if(review == null) throw new ReviewNotFoundException("No review with id - "+reviewId);
 
         reviewService.deleteReviewById(reviewId);
 

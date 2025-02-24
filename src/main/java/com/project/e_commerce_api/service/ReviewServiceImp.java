@@ -5,6 +5,7 @@ import com.project.e_commerce_api.dto.ReviewDTO;
 import com.project.e_commerce_api.entity.Product;
 import com.project.e_commerce_api.entity.Review;
 import com.project.e_commerce_api.entity.User;
+import com.project.e_commerce_api.exception.ProductNotFoundException;
 import com.project.e_commerce_api.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,9 @@ public class ReviewServiceImp implements ReviewService{
     @Override
     public List<ReviewDTO> getReviewsForProduct(Integer productId) {
 
-        ProductDTO product = productService.findById(productId);
+        Product product = productService.findById(productId);
 
-        if (product == null) throw new RuntimeException("No product with id - "+ productId);
+        if (product == null) throw new ProductNotFoundException("No product with id - "+ productId);
 
         List<Review> reviews = reviewRepository.findByProduct_Id(productId);
 
@@ -44,7 +45,7 @@ public class ReviewServiceImp implements ReviewService{
 
         Product product = productService.find(productId);
 
-        if (product == null) throw new RuntimeException("No product with id - "+ productId);
+        if (product == null) throw new ProductNotFoundException("No product with id - "+ productId);
 
         review.setProduct(product);
         review.setCustomer(user.getCustomer());

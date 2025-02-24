@@ -32,4 +32,9 @@ public class VendorServiceImp implements VendorService{
 
         return vendors.stream().map(VendorDTO::new).toList();
     }
+
+    @Override
+    public List<Vendor> findAllById(List<Integer> vendorIds) {
+        return vendorRepository.findAllById(vendorIds);
+    }
 }

@@ -1,7 +1,8 @@
 package com.project.e_commerce_api.service;
 
 import com.project.e_commerce_api.dto.OrderDTO;
-import com.project.e_commerce_api.entity.OrderRequest;
+import com.project.e_commerce_api.dto.OrderRequest;
+import com.project.e_commerce_api.entity.Order;
 import com.project.e_commerce_api.entity.User;
 import com.project.e_commerce_api.enums.OrderStatus;
 
@@ -14,11 +15,13 @@ public interface OrderService {
 
     List<OrderDTO> getOrders(User user);
 
-    OrderDTO findById(Integer orderId);
+    Order findById(Integer orderId);
 
     List<OrderDTO> getAllOrders(User user);
 
     String cancelOrder(Integer orderId);
 
     String updateStatus(Integer orderId, Map<String,String> orderStatus);
+
+    void updateStatus(Integer orderId, OrderStatus orderStatus);
 }
