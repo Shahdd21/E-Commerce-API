@@ -26,11 +26,6 @@ public class CategoryServiceImp implements CategoryService{
     }
 
     @Override
-    public CategoryDTO findDtoById(Integer id){
-        return new CategoryDTO(categoryRepository.findById(id).orElse(null));
-    }
-
-    @Override
     public Category findById(Integer id) {
         return categoryRepository.findById(id).get();
     }
