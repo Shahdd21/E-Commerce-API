@@ -11,6 +11,7 @@ public class PaymentDTO {
     private String paymentStatus;
     private BigDecimal amount;
     private String createdAt;
+    private Integer orderId;
 
     public PaymentDTO(Payment payment){
 
@@ -19,6 +20,7 @@ public class PaymentDTO {
         this.paymentStatus = payment.getPayment_status().name();
         this.amount = payment.getAmount();
         this.createdAt = payment.getCreated_at()+"";
+        this.orderId = payment.getOrder().getOrder_id();
     }
 
     public Integer getPaymentId() {
@@ -61,14 +63,23 @@ public class PaymentDTO {
         this.createdAt = createdAt;
     }
 
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
     @Override
     public String toString() {
-        return "Payment{" +
+        return "PaymentDTO{" +
                 "paymentId=" + paymentId +
                 ", paymentMethod='" + paymentMethod + '\'' +
                 ", paymentStatus='" + paymentStatus + '\'' +
                 ", amount=" + amount +
                 ", createdAt='" + createdAt + '\'' +
+                ", orderId=" + orderId +
                 '}';
     }
 }

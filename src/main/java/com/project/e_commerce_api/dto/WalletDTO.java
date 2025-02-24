@@ -1,31 +1,23 @@
-package com.project.e_commerce_api.entity;
+package com.project.e_commerce_api.dto;
 
-import jakarta.persistence.*;
+import com.project.e_commerce_api.entity.Wallet;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "wallet")
-public class Wallet {
+public class WalletDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "wallet_id")
     private Integer walletId;
-
-    @OneToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
-    @Column(name = "balance")
-    private BigDecimal balance = BigDecimal.ZERO;
-
-    @Column(name = "updated_at")
+    private Integer customerId;
+    private BigDecimal balance;
     private LocalDate updatedAt;
 
-    public Wallet(){
+    public WalletDTO(Wallet wallet){
 
+        this.walletId = wallet.getWalletId();
+        this.customerId = wallet.getCustomer().getCustomer_id();
+        this.balance = wallet.getBalance();
+        this.updatedAt = wallet.getUpdatedAt();
     }
 
     public Integer getWalletId() {
@@ -36,12 +28,12 @@ public class Wallet {
         this.walletId = walletId;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public Integer getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
     }
 
     public BigDecimal getBalance() {
