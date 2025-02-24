@@ -1,4 +1,4 @@
-package com.project.e_commerce_api.entity;
+package com.project.e_commerce_api.dto;
 
 import java.util.ArrayList;
 import java.util.List;
