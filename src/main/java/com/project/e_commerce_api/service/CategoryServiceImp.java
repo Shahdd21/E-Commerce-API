@@ -40,4 +40,9 @@ public class CategoryServiceImp implements CategoryService{
     public Category save(Category category) {
         return categoryRepository.save(category);
     }
+
+    @Override
+    public List<Category> findAllById(List<Integer> categoryIds) {
+        return categoryRepository.findAllById(categoryIds);
+    }
 }
