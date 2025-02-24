@@ -2,6 +2,7 @@ package com.project.e_commerce_api.controller;
 
 import com.project.e_commerce_api.dto.UserDTO;
 import com.project.e_commerce_api.entity.User;
+import com.project.e_commerce_api.exception.UserNotFoundException;
 import com.project.e_commerce_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class AdminController {
 
         UserDTO user = userService.findById(userId);
 
-        if(user == null) throw new RuntimeException("No user with user id - " + userId);
+        if(user == null) throw new UserNotFoundException("No user with user id - " + userId);
 
         return user;
     }
@@ -39,7 +40,7 @@ public class AdminController {
 
         UserDTO user = userService.findById(userId);
 
-        if(user == null) throw new RuntimeException("No user with user id - " + userId);
+        if(user == null) throw new UserNotFoundException("No user with user id - " + userId);
 
         userService.deleteById(userId);
 
