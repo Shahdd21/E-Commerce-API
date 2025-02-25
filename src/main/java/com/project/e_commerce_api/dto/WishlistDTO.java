@@ -2,6 +2,7 @@ package com.project.e_commerce_api.dto;
 
 import com.project.e_commerce_api.entity.Wishlist;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WishlistDTO {
@@ -12,7 +13,8 @@ public class WishlistDTO {
 
     public WishlistDTO(Wishlist wishlist){
         this.customerId = wishlist.getCustomer().getCustomer_id();
-        this.products = wishlist.getProducts().stream().map(ProductDTO::new).toList();
+        this.products = ( wishlist.getProducts() == null || wishlist.getProducts().isEmpty() ) ?
+                new ArrayList<>() : wishlist.getProducts().stream().map(ProductDTO::new).toList();
     }
 
     public Integer getCustomerId() {

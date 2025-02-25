@@ -23,14 +23,14 @@ public class WishlistServiceImp implements WishlistService{
     }
 
     @Override
-    public WishlistDTO getWishlist(Integer userId) {
-        return new WishlistDTO(wishlistRepository.findById(userId).get());
+    public WishlistDTO getWishlist(Integer customerId) {
+        return new WishlistDTO(wishlistRepository.findById(customerId).get());
     }
 
     @Override
-    public String addProductToWishlist(Integer userId, Integer productId) {
+    public String addProductToWishlist(Integer customerId, Integer productId) {
 
-        Wishlist wishlist = wishlistRepository.findById(userId).get();
+        Wishlist wishlist = wishlistRepository.findById(customerId).get();
 
         Product product = productRepository.findById(productId).orElse(null);
 
@@ -44,9 +44,9 @@ public class WishlistServiceImp implements WishlistService{
     }
 
     @Override
-    public String deleteProductFromWishlist(Integer userId, Integer productId) {
+    public String deleteProductFromWishlist(Integer customerId, Integer productId) {
 
-        Wishlist wishlist = wishlistRepository.findById(userId).get();
+        Wishlist wishlist = wishlistRepository.findById(customerId).get();
 
         Product product = productRepository.findById(productId).orElse(null);
 

@@ -1,13 +1,12 @@
 package com.project.e_commerce_api.service;
 
 import com.project.e_commerce_api.dto.WishlistDTO;
-import com.project.e_commerce_api.entity.Wishlist;
 
 public interface WishlistService {
 
-    WishlistDTO getWishlist(Integer userId);
+    WishlistDTO getWishlist(Integer customerId);
 
-    String addProductToWishlist(Integer userId, Integer productId);
+    String addProductToWishlist(Integer customerId, Integer productId);
 
-    String deleteProductFromWishlist(Integer userId, Integer productId);
+    String deleteProductFromWishlist(Integer customerId, Integer productId);
 }

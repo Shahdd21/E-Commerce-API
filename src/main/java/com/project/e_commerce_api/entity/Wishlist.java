@@ -27,6 +27,7 @@ public class Wishlist {
     private List<Product> products;
 
     public Wishlist(){
+        products = new ArrayList<>();
     }
 
     public Integer getCustomerId() {

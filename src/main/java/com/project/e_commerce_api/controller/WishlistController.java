@@ -22,20 +22,20 @@ public class WishlistController {
 
     @GetMapping
     public WishlistDTO getWishlist(@AuthenticationPrincipal User loggedInUser){
-        return wishlistService.getWishlist(loggedInUser.getUser_id());
+        return wishlistService.getWishlist(loggedInUser.getCustomer().getCustomer_id());
     }
 
     @PostMapping("/{productId}")
     public String addProductToWishlist(@AuthenticationPrincipal User loggedInUser,
                                        @PathVariable Integer productId){
 
-        return wishlistService.addProductToWishlist(loggedInUser.getUser_id(),productId);
+        return wishlistService.addProductToWishlist(loggedInUser.getCustomer().getCustomer_id(),productId);
     }
 
     @DeleteMapping("/{productId}")
     public String deleteProductFromWishlist(@AuthenticationPrincipal User loggedInUser,
                                             @PathVariable Integer productId){
 
-        return wishlistService.deleteProductFromWishlist(loggedInUser.getUser_id(),productId);
+        return wishlistService.deleteProductFromWishlist(loggedInUser.getCustomer().getCustomer_id(),productId);
     }
 }
