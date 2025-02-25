@@ -37,7 +37,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT,"/products/**").hasRole("VENDOR")
                         .requestMatchers(HttpMethod.PATCH,"/products/**").hasRole("VENDOR")
                         .requestMatchers(HttpMethod.DELETE,"/products/**").hasAnyRole("VENDOR", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/orders").hasAnyRole("CUSTOMER", "VENDOR")
+                        .requestMatchers(HttpMethod.GET, "/orders").hasRole("CUSTOMER")
                         .requestMatchers(HttpMethod.GET, "/orders/{orderId:\\\\d+}").hasAnyRole("CUSTOMER","ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/orders/{orderId:\\\\d+}/cancel").hasRole("CUSTOMER")
                         .requestMatchers(HttpMethod.GET, "/orders/all").hasRole("ADMIN")
@@ -52,7 +52,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/wishlist/{productId:\\\\d+}").hasRole("CUSTOMER")
                         .requestMatchers(HttpMethod.DELETE, "/wishlist/{productId:\\\\d+}").hasRole("CUSTOMER")
                         .requestMatchers(HttpMethod.GET, "/categories").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/categories").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/categories/{categoryId:\\\\d+}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/categories/{categoryId:\\\\d+}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/vendors").permitAll()
+                        .requestMatchers("/wallet").hasRole("CUSTOMER")
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
