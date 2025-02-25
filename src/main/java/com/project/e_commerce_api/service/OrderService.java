@@ -24,4 +24,6 @@ public interface OrderService {
     String updateStatus(Integer orderId, Map<String,String> orderStatus);
 
     void updateStatus(Integer orderId, OrderStatus orderStatus);
+
+    Order save(Order order);
 }

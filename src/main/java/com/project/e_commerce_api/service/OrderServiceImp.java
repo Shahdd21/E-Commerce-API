@@ -158,4 +158,9 @@ public class OrderServiceImp implements OrderService{
         order.setOrder_status(orderStatus);
         orderRepository.save(order);
     }
+
+    @Override
+    public Order save(Order order) {
+        return orderRepository.save(order);
+    }
 }
