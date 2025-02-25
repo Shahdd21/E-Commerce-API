@@ -19,10 +19,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(AuthenticationFailedException.class)
-    public ResponseEntity<ErrorResponse> handleAuthenticationFailure(AuthenticationFailedException ex) {
-        return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()), HttpStatus.BAD_REQUEST);
-    }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorizedAccess(UnauthorizedAccessException ex) {
@@ -60,12 +56,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(VendorNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleReviewNotFound(VendorNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleVendorNotFound(VendorNotFoundException ex) {
         return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(CategoryNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleReviewNotFound(CategoryNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleCategoryNotFound(CategoryNotFoundException ex) {
         return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 }
