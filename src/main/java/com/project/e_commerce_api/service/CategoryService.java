@@ -14,4 +14,10 @@ public interface CategoryService {
     Category save(Category category);
 
     List<Category> findAllById(List<Integer> categoryIds);
+
+    String addCategory(String categoryName);
+
+    String updateCategory(String categoryName, Integer categoryId);
+
+    String deleteCategory(Integer categoryId);
 }
