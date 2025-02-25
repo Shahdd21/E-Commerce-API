@@ -9,9 +9,7 @@ import com.project.e_commerce_api.entity.Wallet;
 import com.project.e_commerce_api.enums.OrderStatus;
 import com.project.e_commerce_api.enums.PaymentMethod;
 import com.project.e_commerce_api.enums.PaymentStatus;
-import com.project.e_commerce_api.exception.OrderNotFoundException;
-import com.project.e_commerce_api.exception.PaymentNotFoundException;
-import com.project.e_commerce_api.exception.UnauthorizedAccessException;
+import com.project.e_commerce_api.exception.*;
 import com.project.e_commerce_api.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,9 +41,21 @@ public class PaymentServiceImp implements PaymentService{
         if(order == null)
             throw new RuntimeException("No order with id - "+orderId);
 
-        Payment payment = new Payment();
+        if(order.getPayment() != null && order.getPayment().getPayment_status() == PaymentStatus.FAILED) {
+            order.setPayment(null);
+            order = orderService.save(order);
+            paymentRepository.delete(order.getPayment());
+        }
 
-        PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentRequest.getPaymentMethod().toUpperCase());
+        Payment payment = new Payment();
+        PaymentMethod paymentMethod;
+
+        try {
+            paymentMethod = PaymentMethod.valueOf(paymentRequest.getPaymentMethod().toUpperCase());
+        } catch (IllegalArgumentException ex){
+            throw new InvalidPaymentMethodException("Invalid payment method: " + paymentRequest.getPaymentMethod());
+        }
+
         payment.setPayment_method( paymentMethod);
 
         PaymentStatus status ;
@@ -77,7 +87,15 @@ public class PaymentServiceImp implements PaymentService{
         payment.setCreated_at(LocalDate.now());
         payment.setOrder(order);
 
-        return new PaymentDTO(paymentRepository.save(payment));
+        Payment savedPayment = paymentRepository.save(payment);
+
+        order.setPayment(savedPayment);
+        orderService.save(order);
+
+        if(savedPayment.getPayment_status() == PaymentStatus.FAILED)
+             throw new InsufficientFundsException("Insufficient funds in wallet");
+
+        return new PaymentDTO(savedPayment);
     }
 
     @Override
