@@ -29,7 +29,7 @@ public class Payment {
     @Column(name = "created_at")
     private LocalDate created_at;
 
-    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "order_id") // the name of the fk in the database
     private Order order;
 
