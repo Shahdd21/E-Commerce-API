@@ -9,7 +9,9 @@ public interface UserService {
 
     List<UserDTO> findAll();
 
-    UserDTO findById(Integer userId);
+    User findById(Integer userId);
 
     void deleteById(Integer userId);
+
+    User save(User user);
 }

@@ -28,12 +28,17 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public UserDTO findById(Integer userId) {
-        return new UserDTO(userRepository.findById(userId).orElse(null));
+    public User findById(Integer userId) {
+        return userRepository.findById(userId).orElse(null);
     }
 
     @Override
     public void deleteById(Integer userId) {
        userRepository.deleteById(userId);
+    }
+
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
     }
 }
