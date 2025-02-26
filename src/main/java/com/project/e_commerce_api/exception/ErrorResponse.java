@@ -1,5 +1,6 @@
 package com.project.e_commerce_api.exception;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,8 @@ public class ErrorResponse {
     private int statusCode;
     private String error;
     private String message;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
     public ErrorResponse(HttpStatus httpStatus, String message){
