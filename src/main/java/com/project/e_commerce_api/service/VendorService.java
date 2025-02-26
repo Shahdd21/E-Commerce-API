@@ -1,6 +1,7 @@
 package com.project.e_commerce_api.service;
 
 import com.project.e_commerce_api.dto.VendorDTO;
+import com.project.e_commerce_api.entity.User;
 import com.project.e_commerce_api.entity.Vendor;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface VendorService {
     List<VendorDTO> findAll();
 
     List<Vendor> findAllById(List<Integer> vendorIds);
+
+    VendorDTO getVendorDetails(User user);
 }
