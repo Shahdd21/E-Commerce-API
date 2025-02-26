@@ -1,5 +1,6 @@
 package com.project.e_commerce_api.service;
 
+import com.project.e_commerce_api.dto.AdminRequest;
 import com.project.e_commerce_api.dto.UserDTO;
 import com.project.e_commerce_api.entity.User;
 
@@ -14,4 +15,6 @@ public interface UserService {
     void deleteById(Integer userId);
 
     User save(User user);
+
+    String addAdmin(AdminRequest adminRequest);
 }
