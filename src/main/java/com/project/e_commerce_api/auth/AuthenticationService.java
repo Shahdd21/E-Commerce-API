@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Random;
 
 @Service
 public class AuthenticationService {
@@ -43,7 +44,13 @@ public class AuthenticationService {
         Customer customer = new Customer(request.getFirstName(), request.getLastName(), request.getEmail(),
                 request.getAddress(), request.getPhoneNumber(), request.getGender());
 
-        User user = new User(request.getFirstName()+"user", passwordEncoder.encode(request.getPassword()),
+        String username;
+
+        do{
+            username = request.getFirstName()+ (new Random().nextInt(1000000)+1);
+        }while(userRepository.findByUsername(username).isPresent());
+
+        User user = new User(username , passwordEncoder.encode(request.getPassword()),
                 UserRole.ROLE_CUSTOMER, true);
 
         User savedUser = userRepository.save(user);
@@ -71,7 +78,7 @@ public class AuthenticationService {
                 request.getPhoneNumber(), new ArrayList<>());
 
         User user = new User(request.getEmail(), passwordEncoder.encode(request.getPassword()),
-                UserRole.ROLE_VENDOR, true);
+                UserRole.ROLE_VENDOR, false);
 
         userRepository.save(user);
 
