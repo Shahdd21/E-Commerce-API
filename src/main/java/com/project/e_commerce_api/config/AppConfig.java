@@ -1,5 +1,10 @@
 package com.project.e_commerce_api.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.project.e_commerce_api.entity.User;
+import com.project.e_commerce_api.enums.UserRole;
+import com.project.e_commerce_api.exception.VendorNotApprovedException;
 import com.project.e_commerce_api.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +32,14 @@ public class AppConfig {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return userRepository.findByUsername(username)
+                User user = userRepository.findByUsername(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+                if(user.getRole() == UserRole.ROLE_VENDOR && !user.isApproved()){
+                    throw new VendorNotApprovedException("Vendor is not approved by admins");
+                }
+
+                return user;
             }
         };
     }
@@ -53,6 +64,11 @@ public class AppConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper().registerModule(new JavaTimeModule());
     }
 }
 
