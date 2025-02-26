@@ -2,9 +2,10 @@ package com.project.e_commerce_api.service;
 
 import com.project.e_commerce_api.dto.CustomerDTO;
 import com.project.e_commerce_api.entity.Customer;
+import com.project.e_commerce_api.entity.User;
 
-import java.util.List;
 
 public interface CustomerService {
-    List<CustomerDTO> findAll();
+
+    CustomerDTO getCustomerDetails(User user);
 }

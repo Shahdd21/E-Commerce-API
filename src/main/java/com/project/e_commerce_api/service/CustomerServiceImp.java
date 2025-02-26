@@ -2,6 +2,8 @@ package com.project.e_commerce_api.service;
 
 import com.project.e_commerce_api.dto.CustomerDTO;
 import com.project.e_commerce_api.entity.Customer;
+import com.project.e_commerce_api.entity.User;
+import com.project.e_commerce_api.exception.UserNotFoundException;
 import com.project.e_commerce_api.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +19,11 @@ public class CustomerServiceImp implements CustomerService{
     }
 
     @Override
-    public List<CustomerDTO> findAll() {
-        List<Customer> customers = customerRepository.findAll();
+    public CustomerDTO getCustomerDetails(User user) {
 
-        List<CustomerDTO> dtos = customers.stream().map(CustomerDTO::new).toList();
+        if(user.getCustomer() == null)
+            throw new UserNotFoundException("This endpoint for customers only.");
 
-        return dtos;
+        return new CustomerDTO(user.getCustomer());
     }
 }
